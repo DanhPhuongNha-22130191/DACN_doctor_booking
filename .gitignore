@@ -33,3 +33,9 @@ build/
 ### OS ###
 .DS_Store
 Thumbs.db
+
+# Java build files
+*.class
+bin/
+target/
+build/

@@ -1,11 +1,6 @@
 package com.example.doctorbooking.dto;
 
 import lombok.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,5 +12,4 @@ public class HospitalDTO {
     private String address;
     private String phone;
     private String email;
-    private List<DepartmentDTO> departments; // chỉ trả department cần thiết
 }

@@ -2,10 +2,7 @@ package com.example.doctorbooking.controller;
 
 import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.dto.HospitalDTO;
-import com.example.doctorbooking.entity.Hospital;
-import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.service.HospitalService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/hospitals")
-@RequiredArgsConstructor
 public class HospitalController {
 
     private final HospitalService hospitalService;
@@ -33,29 +29,10 @@ public class HospitalController {
     public Hospital createHospital(@RequestBody Hospital hospital) {
         return hospitalService.createHospital(hospital);
     }
-    @DeleteMapping("delete/{id}")
-    public String deleteHospital(@PathVariable Integer id) {
-        hospitalService.deleteHospital(id);
-        return "Deleted successfully (soft delete)";
 
     // Xem chi tiết bệnh viện
     @GetMapping("/{id}")
     public ResponseEntity<HospitalDTO> getHospitalDetail(@PathVariable Integer id) {
         return ResponseEntity.ok(hospitalService.getHospitalDetail(id));
     }
-
-    // Search
-    @GetMapping("/search")
-    public List<HospitalDTO> searchHospitals(@RequestParam(required = false) String keyword) {
-        return hospitalService.searchHospitals(keyword);
-    }
-    // Admin update hospital
-    @PutMapping("/admin/{id}")
-    public ResponseEntity<HospitalDTO> updateHospital(
-            @PathVariable Integer id,
-            @RequestBody Hospital hospitalRequest
-    ) {
-        return ResponseEntity.ok(hospitalService.updateHospital(id, hospitalRequest));
-    }
-
 }
