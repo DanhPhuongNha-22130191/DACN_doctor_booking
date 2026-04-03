@@ -1,11 +1,5 @@
 package com.example.doctorbooking.controller;
 
-import com.example.doctorbooking.dto.DoctorDTO;
-import com.example.doctorbooking.service.DoctorService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +8,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DoctorController {
     private final DoctorService doctorService;
+
+    public DoctorController(DoctorService doctorService) {
+        this.doctorService = doctorService;
+    }
+
+    // Xem danh sách bác sĩ
+    @GetMapping
+    public List<Doctor> getAllDoctors() {
+        return doctorService.getAllDoctor();
+    }
+
+    // Thêm bác sĩ
+    @PostMapping
+    public Doctor createDoctor(@RequestBody Doctor doctor) {
+        return doctorService.createDoctor(doctor);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getDoctorDetail(@PathVariable Integer id) {
