@@ -1,9 +1,5 @@
 package com.example.doctorbooking.service;
 
-import com.example.doctorbooking.entity.Doctor;
-import com.example.doctorbooking.entity.Hospital;
-import com.example.doctorbooking.enums.Status;
-import lombok.RequiredArgsConstructor;
 import com.example.doctorbooking.dto.DoctorDTO;
 import com.example.doctorbooking.entity.Doctor;
 import com.example.doctorbooking.repository.DoctorRepository;
@@ -11,9 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import javax.print.Doc;
-import java.util.List;
+import com.example.doctorbooking.enums.Status;
 
 @Service
 public class DoctorService {
@@ -31,18 +25,16 @@ public class DoctorService {
 
     // Danh sách bác sĩ
     public List<Doctor> getAllDoctor() {
-        return doctorRepository.findByStatus(Status.active);
+        return doctorRepository.findAll();
     }
-    // Xoa mot bac si
+
+    // Xóa mềm bác sĩ
     public void deleteDoctor(Integer id) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + id));
 
         doctor.setStatus(Status.inactive);
         doctorRepository.save(doctor);
-    }
-
-        return doctorRepository.findAll();
     }
 
     // Chi tiết bác sĩ
