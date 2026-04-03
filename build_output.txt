@@ -1,0 +1,56 @@
+
+> Task :compileJava FAILED
+/home/phuongnha/SourcesCode/DACN_doctor_booking/src/main/java/com/example/doctorbooking/service/HospitalService.java:54: error: cannot find symbol
+            hospitals = hospitalRepository.searchByKeyword(keyword);
+                                          ^
+  symbol:   method searchByKeyword(String)
+  location: variable hospitalRepository of type HospitalRepository
+/home/phuongnha/SourcesCode/DACN_doctor_booking/src/main/java/com/example/doctorbooking/service/HospitalService.java:68: error: no suitable constructor found for HospitalDTO(Integer,String,String,String,String,List<DepartmentDTO>)
+            return new HospitalDTO(h.getId(), h.getName(), h.getAddress(), h.getPhone(), h.getEmail(), deptDTOs);
+                   ^
+    constructor HospitalDTO.HospitalDTO() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor HospitalDTO.HospitalDTO(Integer,String,String,String,String) is not applicable
+      (actual and formal argument lists differ in length)
+/home/phuongnha/SourcesCode/DACN_doctor_booking/src/main/java/com/example/doctorbooking/service/HospitalService.java:69: error: incompatible types: inference variable T has incompatible bounds
+        }).collect(Collectors.toList());
+                  ^
+    equality constraints: HospitalDTO
+    lower bounds: Object
+  where T is a type-variable:
+    T extends Object declared in method <T>toList()
+/home/phuongnha/SourcesCode/DACN_doctor_booking/src/main/java/com/example/doctorbooking/service/HospitalService.java:95: error: no suitable constructor found for HospitalDTO(Integer,String,String,String,String,List<DepartmentDTO>)
+        return new HospitalDTO(
+               ^
+    constructor HospitalDTO.HospitalDTO() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor HospitalDTO.HospitalDTO(Integer,String,String,String,String) is not applicable
+      (actual and formal argument lists differ in length)
+4 errors
+
+[Incubating] Problems report is available at: file:///home/phuongnha/SourcesCode/DACN_doctor_booking/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler output below.
+  /home/phuongnha/SourcesCode/DACN_doctor_booking/src/main/java/com/example/doctorbooking/service/HospitalService.java:54: error: cannot find symbol
+              hospitals = hospitalRepository.searchByKeyword(keyword);
+                                            ^
+    symbol:   method searchByKeyword(String)
+    location: variable hospitalRepository of type HospitalRepository
+  4 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 1s
+1 actionable task: 1 executed

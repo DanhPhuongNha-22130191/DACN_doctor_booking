@@ -5,6 +5,7 @@ import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.service.HospitalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +31,6 @@ public class HospitalController {
     public Hospital createHospital(@RequestBody Hospital hospital) {
         return hospitalService.createHospital(hospital);
     }
-    @DeleteMapping("delete/{id}")
-    public String deleteHospital(@PathVariable Integer id) {
-        hospitalService.deleteHospital(id);
-        return "Deleted successfully (soft delete)";
 
     // Xem chi tiết bệnh viện
     @GetMapping("/{id}")

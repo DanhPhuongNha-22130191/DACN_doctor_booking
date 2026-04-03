@@ -1,6 +1,5 @@
 package com.example.doctorbooking.dto;
 
-import com.example.doctorbooking.entity.AppointmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,13 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AppointmentDTO {
-    private Integer id;
+public class AppointmentRequest {
     private Integer userId;
-    private String userName;
     private Integer doctorId;
-    private String doctorName;
     private LocalDateTime appointmentDate;
-    private AppointmentStatus status;
     private String reason;
 }

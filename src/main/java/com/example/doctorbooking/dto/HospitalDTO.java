@@ -2,6 +2,8 @@ package com.example.doctorbooking.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,4 +14,5 @@ public class HospitalDTO {
     private String address;
     private String phone;
     private String email;
+    private List<DepartmentDTO> departments;
 }
