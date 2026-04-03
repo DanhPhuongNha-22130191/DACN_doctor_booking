@@ -84,4 +84,38 @@ public class HospitalService {
             return new HospitalDTO(h.getId(), h.getName(), h.getAddress(), h.getPhone(), h.getEmail(), deptDTOs);
         }).collect(Collectors.toList());
     }
+    // Update bệnh viện cho admin
+    public HospitalDTO updateHospital(Integer id, Hospital hospitalRequest) {
+        Hospital hospital = hospitalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Hospital not found with id: " + id));
+
+        hospital.setName(hospitalRequest.getName());
+        hospital.setAddress(hospitalRequest.getAddress());
+        hospital.setPhone(hospitalRequest.getPhone());
+        hospital.setEmail(hospitalRequest.getEmail());
+
+        Hospital updatedHospital = hospitalRepository.save(hospital);
+        return mapToDTO(updatedHospital);
+    }
+    private HospitalDTO mapToDTO(Hospital h) {
+        List<DepartmentDTO> deptDTOs = h.getDepartments() == null
+                ? List.of()
+                : h.getDepartments().stream()
+                .map(d -> new DepartmentDTO(
+                        d.getId(),
+                        d.getName(),
+                        d.getStatus() != null ? d.getStatus().name() : null
+                ))
+                .collect(Collectors.toList());
+
+        return new HospitalDTO(
+                h.getId(),
+                h.getName(),
+                h.getAddress(),
+                h.getPhone(),
+                h.getEmail(),
+                deptDTOs
+        );
+    }
+
 }
