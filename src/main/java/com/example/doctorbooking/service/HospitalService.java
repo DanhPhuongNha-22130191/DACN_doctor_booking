@@ -1,22 +1,22 @@
 package com.example.doctorbooking.service;
 
+import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.entity.Hospital;
-import com.example.doctorbooking.repository.DoctorRepository;
 import com.example.doctorbooking.repository.HospitalRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
 
     public HospitalService(HospitalRepository hospitalRepository) {
         this.hospitalRepository = hospitalRepository;
+    }
+
     @Transactional(readOnly = true)
     public HospitalDTO getHospitalDetail(Integer id) {
         Hospital hospital = hospitalRepository.findById(id)

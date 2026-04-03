@@ -1,13 +1,14 @@
 package com.example.doctorbooking.service;
 
+import com.example.doctorbooking.dto.DoctorDTO;
+import com.example.doctorbooking.entity.Doctor;
+import com.example.doctorbooking.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.Doc;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
