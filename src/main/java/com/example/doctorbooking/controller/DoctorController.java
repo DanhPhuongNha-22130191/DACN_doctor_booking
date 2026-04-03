@@ -2,7 +2,9 @@ package com.example.doctorbooking.controller;
 
 import com.example.doctorbooking.dto.DoctorDTO;
 import com.example.doctorbooking.dto.DoctorResponse;
+import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.entity.Doctor;
+import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.service.DoctorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +43,12 @@ public class DoctorController {
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getDoctorDetail(@PathVariable Integer id) {
         return ResponseEntity.ok(doctorService.getDoctorDetail(id));
+    }
+
+    @GetMapping("/search")
+    public List<DoctorDTO> searchDoctors(
+            @RequestParam(required = false) String keyword
+    ) {
+        return doctorService.searchDoctors(keyword);
     }
 }
