@@ -6,6 +6,7 @@ import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.service.HospitalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +48,14 @@ public class HospitalController {
     @GetMapping("/search")
     public List<HospitalDTO> searchHospitals(@RequestParam(required = false) String keyword) {
         return hospitalService.searchHospitals(keyword);
+    }
+    // Admin update hospital
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<HospitalDTO> updateHospital(
+            @PathVariable Integer id,
+            @RequestBody Hospital hospitalRequest
+    ) {
+        return ResponseEntity.ok(hospitalService.updateHospital(id, hospitalRequest));
     }
 
 }
