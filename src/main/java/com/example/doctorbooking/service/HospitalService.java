@@ -17,6 +17,17 @@ public class HospitalService {
         this.hospitalRepository = hospitalRepository;
     }
 
+    // Thêm bệnh viện
+    public Hospital createHospital(Hospital hospital) {
+        return hospitalRepository.save(hospital);
+    }
+
+    // Danh sách bệnh viện
+    public List<Hospital> getAllHospital() {
+        return hospitalRepository.findAll();
+    }
+
+    // Chi tiết bệnh viện
     @Transactional(readOnly = true)
     public HospitalDTO getHospitalDetail(Integer id) {
         Hospital hospital = hospitalRepository.findById(id)
@@ -29,15 +40,5 @@ public class HospitalService {
                 .phone(hospital.getPhone())
                 .email(hospital.getEmail())
                 .build();
-    }
-
-    // Thêm bệnh viện
-    public Hospital createHospital(Hospital hospital) {
-        return hospitalRepository.save(hospital);
-    }
-
-    // Danh sách bệnh viện
-    public List<Hospital> getAllHospital() {
-        return hospitalRepository.findAll();
     }
 }

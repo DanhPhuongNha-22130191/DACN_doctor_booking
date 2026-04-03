@@ -30,6 +30,7 @@ public class HospitalController {
         return hospitalService.createHospital(hospital);
     }
 
+    // Xem chi tiết bệnh viện
     @GetMapping("/{id}")
     public ResponseEntity<HospitalDTO> getHospitalDetail(@PathVariable Integer id) {
         return ResponseEntity.ok(hospitalService.getHospitalDetail(id));

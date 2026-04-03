@@ -29,6 +29,7 @@ public class DoctorController {
         return doctorService.createDoctor(doctor);
     }
 
+    // Xem chi tiết bác sĩ
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getDoctorDetail(@PathVariable Integer id) {
         return ResponseEntity.ok(doctorService.getDoctorDetail(id));

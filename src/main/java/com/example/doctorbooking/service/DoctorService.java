@@ -27,6 +27,7 @@ public class DoctorService {
         return doctorRepository.findAll();
     }
 
+    // Chi tiết bác sĩ
     @Transactional(readOnly = true)
     public DoctorDTO getDoctorDetail(Integer id) {
         Doctor doctor = doctorRepository.findById(id)
