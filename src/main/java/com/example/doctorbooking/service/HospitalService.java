@@ -1,9 +1,10 @@
 package com.example.doctorbooking.service;
 
+import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.entity.Hospital;
-import com.example.doctorbooking.repository.DoctorRepository;
 import com.example.doctorbooking.repository.HospitalRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,5 +25,20 @@ public class HospitalService {
     // Danh sách bệnh viện
     public List<Hospital> getAllHospital() {
         return hospitalRepository.findAll();
+    }
+
+    // Chi tiết bệnh viện
+    @Transactional(readOnly = true)
+    public HospitalDTO getHospitalDetail(Integer id) {
+        Hospital hospital = hospitalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Hospital not found with id: " + id));
+
+        return HospitalDTO.builder()
+                .id(hospital.getId())
+                .name(hospital.getName())
+                .address(hospital.getAddress())
+                .phone(hospital.getPhone())
+                .email(hospital.getEmail())
+                .build();
     }
 }

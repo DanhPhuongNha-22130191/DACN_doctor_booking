@@ -1,9 +1,9 @@
 package com.example.doctorbooking.controller;
 
+import com.example.doctorbooking.dto.DoctorDTO;
 import com.example.doctorbooking.entity.Doctor;
-import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.service.DoctorService;
-import com.example.doctorbooking.service.HospitalService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,4 +29,9 @@ public class DoctorController {
         return doctorService.createDoctor(doctor);
     }
 
+    // Xem chi tiết bác sĩ
+    @GetMapping("/{id}")
+    public ResponseEntity<DoctorDTO> getDoctorDetail(@PathVariable Integer id) {
+        return ResponseEntity.ok(doctorService.getDoctorDetail(id));
+    }
 }
