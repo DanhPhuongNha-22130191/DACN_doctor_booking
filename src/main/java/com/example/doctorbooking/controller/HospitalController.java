@@ -1,8 +1,10 @@
 package com.example.doctorbooking.controller;
 
+import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.service.HospitalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,4 +37,19 @@ public class HospitalController {
     public ResponseEntity<HospitalDTO> getHospitalDetail(@PathVariable Integer id) {
         return ResponseEntity.ok(hospitalService.getHospitalDetail(id));
     }
+
+    // Search
+    @GetMapping("/search")
+    public List<HospitalDTO> searchHospitals(@RequestParam(required = false) String keyword) {
+        return hospitalService.searchHospitals(keyword);
+    }
+    // Admin update hospital
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<HospitalDTO> updateHospital(
+            @PathVariable Integer id,
+            @RequestBody Hospital hospitalRequest
+    ) {
+        return ResponseEntity.ok(hospitalService.updateHospital(id, hospitalRequest));
+    }
+
 }
