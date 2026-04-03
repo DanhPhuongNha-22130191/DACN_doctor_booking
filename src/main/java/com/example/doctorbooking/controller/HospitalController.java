@@ -1,6 +1,7 @@
 package com.example.doctorbooking.controller;
 
 import com.example.doctorbooking.dto.HospitalDTO;
+import com.example.doctorbooking.dto.HospitalResponse;
 import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.service.HospitalService;
@@ -22,7 +23,7 @@ public class HospitalController {
 
     // Xem danh sách bệnh viện
     @GetMapping
-    public List<Hospital> getAll() {
+    public List<HospitalResponse> getAll() {
         return hospitalService.getAllHospital();
     }
 

@@ -1,6 +1,9 @@
 package com.example.doctorbooking.service;
 
 import com.example.doctorbooking.dto.DoctorDTO;
+import com.example.doctorbooking.dto.DoctorResponse;
+import com.example.doctorbooking.dto.SimpleDepartment;
+import com.example.doctorbooking.dto.SimpleHospital;
 import com.example.doctorbooking.entity.Doctor;
 import com.example.doctorbooking.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
@@ -23,9 +26,32 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
+    public DoctorResponse mapToResponse(Doctor doctor) {
+        return DoctorResponse.builder()
+                .id(doctor.getId())
+                .name(doctor.getName())
+                .phone(doctor.getPhone())
+                .email(doctor.getEmail())
+                .status(doctor.getStatus().name())
+
+                .hospital(SimpleHospital.builder()
+                        .id(doctor.getHospital().getId())
+                        .name(doctor.getHospital().getName())
+                        .build())
+
+                .department(SimpleDepartment.builder()
+                        .id(doctor.getDepartment().getId())
+                        .name(doctor.getDepartment().getName())
+                        .build())
+                .build();
+    }
+
     // Danh sách bác sĩ
-    public List<Doctor> getAllDoctor() {
-        return doctorRepository.findAll();
+    public List<DoctorResponse> getAllDoctor() {
+        return doctorRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     // Xóa mềm bác sĩ

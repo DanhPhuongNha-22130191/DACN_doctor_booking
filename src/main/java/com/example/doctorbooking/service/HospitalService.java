@@ -3,6 +3,7 @@ package com.example.doctorbooking.service;
 import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.dto.DepartmentDTO;
 import com.example.doctorbooking.dto.HospitalDTO;
+import com.example.doctorbooking.dto.HospitalResponse;
 import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.repository.DoctorRepository;
 import com.example.doctorbooking.repository.HospitalRepository;
@@ -27,9 +28,25 @@ public class HospitalService {
         return hospitalRepository.save(hospital);
     }
 
+    public HospitalResponse mapToResponse(Hospital h) {
+        return HospitalResponse.builder()
+                .id(h.getId())
+                .name(h.getName())
+                .address(h.getAddress())
+                .phone(h.getPhone())
+                .email(h.getEmail())
+                .created_at(h.getCreatedAt().toString())
+                .updated_at(h.getUpdatedAt().toString())
+                .build();
+    }
+
     // Danh sách bệnh viện
-    public List<Hospital> getAllHospital() {
-        return hospitalRepository.findAll();
+    public List<HospitalResponse> getAllHospital() {
+        return hospitalRepository.findAll()
+                .stream()
+                .filter(h -> h.getStatus() == Status.active) // optional (rất nên)
+                .map(this::mapToResponse)
+                .toList();
     }
 
     // Xóa mềm bệnh viện

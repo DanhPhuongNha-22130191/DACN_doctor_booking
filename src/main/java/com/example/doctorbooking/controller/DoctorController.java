@@ -1,6 +1,7 @@
 package com.example.doctorbooking.controller;
 
 import com.example.doctorbooking.dto.DoctorDTO;
+import com.example.doctorbooking.dto.DoctorResponse;
 import com.example.doctorbooking.entity.Doctor;
 import com.example.doctorbooking.service.DoctorService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class DoctorController {
 
     // Xem danh sách bác sĩ
     @GetMapping
-    public List<Doctor> getAllDoctors() {
+    public List<DoctorResponse> getAllDoctors() {
         return doctorService.getAllDoctor();
     }
 
