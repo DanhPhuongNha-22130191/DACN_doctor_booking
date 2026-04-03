@@ -28,5 +28,11 @@ public class DoctorController {
     public Doctor createDoctor(@RequestBody Doctor doctor) {
         return doctorService.createDoctor(doctor);
     }
+    // Xoa bac si
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Integer id) {
+        doctorService.deleteDoctor(id);
+        return "Doctor deleted (soft delete)";
+    }
 
 }
