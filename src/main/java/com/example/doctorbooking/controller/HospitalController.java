@@ -1,6 +1,9 @@
 package com.example.doctorbooking.controller;
 
 import com.example.doctorbooking.entity.Hospital;
+import com.example.doctorbooking.dto.HospitalDTO;
+import com.example.doctorbooking.entity.Hospital;
+import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.service.HospitalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,10 @@ import java.util.List;
 public class HospitalController {
 
     private final HospitalService hospitalService;
+
+    public HospitalController(HospitalService hospitalService) {
+        this.hospitalService = hospitalService;
+    }
 
     // Xem danh sách bệnh viện
     @GetMapping
@@ -29,6 +36,17 @@ public class HospitalController {
     public String deleteHospital(@PathVariable Integer id) {
         hospitalService.deleteHospital(id);
         return "Deleted successfully (soft delete)";
+
+    // Xem chi tiết bệnh viện
+    @GetMapping("/{id}")
+    public ResponseEntity<HospitalDTO> getHospitalDetail(@PathVariable Integer id) {
+        return ResponseEntity.ok(hospitalService.getHospitalDetail(id));
+    }
+
+    // Search
+    @GetMapping("/search")
+    public List<HospitalDTO> searchHospitals(@RequestParam(required = false) String keyword) {
+        return hospitalService.searchHospitals(keyword);
     }
 
 }
