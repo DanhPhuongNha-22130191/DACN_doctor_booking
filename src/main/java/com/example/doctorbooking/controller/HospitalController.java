@@ -25,7 +25,7 @@ public class HospitalController {
     public Hospital createHospital(@RequestBody Hospital hospital) {
         return hospitalService.createHospital(hospital);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     public String deleteHospital(@PathVariable Integer id) {
         hospitalService.deleteHospital(id);
         return "Deleted successfully (soft delete)";
