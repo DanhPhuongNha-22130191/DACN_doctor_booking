@@ -1,5 +1,6 @@
 package com.example.doctorbooking.controller;
 
+import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.service.HospitalService;
 import lombok.RequiredArgsConstructor;
@@ -25,4 +26,11 @@ public class HospitalController {
     public Hospital createHospital(@RequestBody Hospital hospital) {
         return hospitalService.createHospital(hospital);
     }
+
+    // Search
+    @GetMapping("/search")
+    public List<HospitalDTO> searchHospitals(@RequestParam(required = false) String keyword) {
+        return hospitalService.searchHospitals(keyword);
+    }
+
 }
