@@ -1,58 +1,52 @@
 package com.example.doctorbooking.service;
 
 import com.example.doctorbooking.dto.HospitalDTO;
-import com.example.doctorbooking.dto.DepartmentDTO;
-import com.example.doctorbooking.dto.HospitalDTO;
+import com.example.doctorbooking.dto.HospitalRequest;
 import com.example.doctorbooking.dto.HospitalResponse;
 import com.example.doctorbooking.entity.Hospital;
-import com.example.doctorbooking.repository.DoctorRepository;
+import com.example.doctorbooking.enums.Status;
+import com.example.doctorbooking.exception.AppException;
+import com.example.doctorbooking.exception.ErrorCode;
+import com.example.doctorbooking.mapper.HospitalMapper;
 import com.example.doctorbooking.repository.HospitalRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import com.example.doctorbooking.enums.Status;
 
 @Service
+@RequiredArgsConstructor
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
-
-    public HospitalService(HospitalRepository hospitalRepository) {
-        this.hospitalRepository = hospitalRepository;
-    }
+    private final HospitalMapper hospitalMapper;
 
     // Thêm bệnh viện
-    public Hospital createHospital(Hospital hospital) {
-        return hospitalRepository.save(hospital);
-    }
-
-    public HospitalResponse mapToResponse(Hospital h) {
-        return HospitalResponse.builder()
-                .id(h.getId())
-                .name(h.getName())
-                .address(h.getAddress())
-                .phone(h.getPhone())
-                .email(h.getEmail())
-                .created_at(h.getCreatedAt().toString())
-                .updated_at(h.getUpdatedAt().toString())
+    public HospitalDTO createHospital(HospitalRequest request) {
+        Hospital hospital = Hospital.builder()
+                .name(request.getName())
+                .address(request.getAddress())
+                .phone(request.getPhone())
+                .email(request.getEmail())
+                .status(Status.active)
                 .build();
+        return hospitalMapper.toHospitalDTO(hospitalRepository.save(hospital));
     }
 
     // Danh sách bệnh viện
     public List<HospitalResponse> getAllHospital() {
         return hospitalRepository.findAll()
                 .stream()
-                .filter(h -> h.getStatus() == Status.active) // optional (rất nên)
-                .map(this::mapToResponse)
+                .filter(h -> h.getStatus() == Status.active)
+                .map(hospitalMapper::toHospitalResponse)
                 .toList();
     }
 
     // Xóa mềm bệnh viện
     public void deleteHospital(Integer id) {
         Hospital hospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital not found with id: " + id));
+                .orElseThrow(() -> new AppException(ErrorCode.HOSPITAL_NOT_FOUND));
 
         hospital.setStatus(Status.inactive);
         hospitalRepository.save(hospital);
@@ -62,15 +56,9 @@ public class HospitalService {
     @Transactional(readOnly = true)
     public HospitalDTO getHospitalDetail(Integer id) {
         Hospital hospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital not found with id: " + id));
+                .orElseThrow(() -> new AppException(ErrorCode.HOSPITAL_NOT_FOUND));
 
-        return HospitalDTO.builder()
-                .id(hospital.getId())
-                .name(hospital.getName())
-                .address(hospital.getAddress())
-                .phone(hospital.getPhone())
-                .email(hospital.getEmail())
-                .build();
+        return hospitalMapper.toHospitalDTO(hospital);
     }
 
     public List<HospitalDTO> searchHospitals(String keyword) {
@@ -81,52 +69,23 @@ public class HospitalService {
             hospitals = hospitalRepository.searchByKeyword(keyword);
         }
 
-        // Chuyển entity → DTO để tránh vòng lặp JSON
-        return hospitals.stream().map(h -> {
-            List<DepartmentDTO> deptDTOs = h.getDepartments()
-                    .stream()
-                    .map(d -> new DepartmentDTO(
-                            d.getId(),
-                            d.getName(),
-                            d.getStatus() != null ? d.getStatus().name() : null
-                    ))
-                    .collect(Collectors.toList());
-
-            return new HospitalDTO(h.getId(), h.getName(), h.getAddress(), h.getPhone(), h.getEmail(), deptDTOs);
-        }).collect(Collectors.toList());
+        return hospitals.stream()
+                .map(hospitalMapper::toHospitalDTO)
+                .toList();
     }
+
     // Update bệnh viện cho admin
-    public HospitalDTO updateHospital(Integer id, Hospital hospitalRequest) {
+    @Transactional
+    public HospitalDTO updateHospital(Integer id, HospitalRequest request) {
         Hospital hospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital not found with id: " + id));
+                .orElseThrow(() -> new AppException(ErrorCode.HOSPITAL_NOT_FOUND));
 
-        hospital.setName(hospitalRequest.getName());
-        hospital.setAddress(hospitalRequest.getAddress());
-        hospital.setPhone(hospitalRequest.getPhone());
-        hospital.setEmail(hospitalRequest.getEmail());
+        hospital.setName(request.getName());
+        hospital.setAddress(request.getAddress());
+        hospital.setPhone(request.getPhone());
+        hospital.setEmail(request.getEmail());
 
-        Hospital updatedHospital = hospitalRepository.save(hospital);
-        return mapToDTO(updatedHospital);
+        return hospitalMapper.toHospitalDTO(hospitalRepository.save(hospital));
     }
-    private HospitalDTO mapToDTO(Hospital h) {
-        List<DepartmentDTO> deptDTOs = h.getDepartments() == null
-                ? List.of()
-                : h.getDepartments().stream()
-                .map(d -> new DepartmentDTO(
-                        d.getId(),
-                        d.getName(),
-                        d.getStatus() != null ? d.getStatus().name() : null
-                ))
-                .collect(Collectors.toList());
-
-        return new HospitalDTO(
-                h.getId(),
-                h.getName(),
-                h.getAddress(),
-                h.getPhone(),
-                h.getEmail(),
-                deptDTOs
-        );
-    }
-
 }
+

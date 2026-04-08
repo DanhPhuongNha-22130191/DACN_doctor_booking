@@ -6,8 +6,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DepartmentDTO {
-    private Integer id;
+public class HospitalRequest {
     private String name;
-    private String status;
+    private String address;
+    private String phone;
+    private String email;
 }
