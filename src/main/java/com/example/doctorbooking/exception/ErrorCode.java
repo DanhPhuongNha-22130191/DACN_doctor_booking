@@ -13,6 +13,15 @@ public enum ErrorCode {
     HOSPITAL_NOT_FOUND(1004, "Hospital not found", HttpStatus.NOT_FOUND),
     DEPARTMENT_NOT_FOUND(1005, "Department not found", HttpStatus.NOT_FOUND),
     INVALID_APPOINTMENT_DATE(1006, "Appointment date must be in the future", HttpStatus.BAD_REQUEST),
+    INVALID_REGISTER_REQUEST(1007, "Invalid register request", HttpStatus.BAD_REQUEST),
+    USERNAME_REQUIRED(1008, "Username is required", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1009, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_REQUIRED(1010, "Password is required", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(1011, "Password must be at least 6 characters", HttpStatus.BAD_REQUEST),
+    EMAIL_REQUIRED(1012, "Email is required", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(1013, "Email is invalid", HttpStatus.BAD_REQUEST),
+    USERNAME_ALREADY_EXISTS(1014, "Username already exists", HttpStatus.CONFLICT),
+    EMAIL_ALREADY_EXISTS(1015, "Email already exists", HttpStatus.CONFLICT),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
