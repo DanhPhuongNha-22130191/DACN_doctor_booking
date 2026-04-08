@@ -1,9 +1,8 @@
 package com.example.doctorbooking.controller;
 
 import com.example.doctorbooking.dto.HospitalDTO;
+import com.example.doctorbooking.dto.HospitalRequest;
 import com.example.doctorbooking.dto.HospitalResponse;
-import com.example.doctorbooking.entity.Hospital;
-import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.service.HospitalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,24 +12,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/hospitals")
+@RequiredArgsConstructor
 public class HospitalController {
 
     private final HospitalService hospitalService;
 
-    public HospitalController(HospitalService hospitalService) {
-        this.hospitalService = hospitalService;
-    }
-
     // Xem danh sách bệnh viện
     @GetMapping
-    public List<HospitalResponse> getAll() {
-        return hospitalService.getAllHospital();
+    public ResponseEntity<List<HospitalResponse>> getAll() {
+        return ResponseEntity.ok(hospitalService.getAllHospital());
     }
 
     // Thêm bệnh viện
     @PostMapping
-    public Hospital createHospital(@RequestBody Hospital hospital) {
-        return hospitalService.createHospital(hospital);
+    public ResponseEntity<HospitalDTO> createHospital(@RequestBody HospitalRequest request) {
+        return ResponseEntity.ok(hospitalService.createHospital(request));
     }
 
     // Xoá bệnh viện (xoá mềm)
@@ -48,16 +44,16 @@ public class HospitalController {
 
     // Search
     @GetMapping("/search")
-    public List<HospitalDTO> searchHospitals(@RequestParam(required = false) String keyword) {
-        return hospitalService.searchHospitals(keyword);
+    public ResponseEntity<List<HospitalDTO>> searchHospitals(@RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(hospitalService.searchHospitals(keyword));
     }
+
     // Admin update hospital
     @PutMapping("/admin/{id}")
     public ResponseEntity<HospitalDTO> updateHospital(
             @PathVariable Integer id,
-            @RequestBody Hospital hospitalRequest
+            @RequestBody HospitalRequest hospitalRequest
     ) {
         return ResponseEntity.ok(hospitalService.updateHospital(id, hospitalRequest));
     }
-
 }

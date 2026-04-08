@@ -13,7 +13,13 @@ INSERT INTO departments (hospital_id, name, status, created_at, updated_at) VALU
 (2, 'Khoa Nhi', 'active', NOW(), NOW()),
 (2, 'Khoa Da liễu', 'active', NOW(), NOW()),
 (3, 'Khoa Chấn thương chỉnh hình', 'active', NOW(), NOW()),
-(3, 'Khoa Hồi sức cấp cứu', 'active', NOW(), NOW());
+(3, 'Khoa Hồi sức cấp cứu', 'active', NOW(), NOW()),
+(1, 'Khoa Răng Hàm Mặt', 'active', NOW(), NOW()),
+(1, 'Khoa Tai Mũi Họng', 'active', NOW(), NOW()),
+(2, 'Khoa Ung Bướu', 'active', NOW(), NOW()),
+(2, 'Khoa Thần Kinh', 'active', NOW(), NOW()),
+(3, 'Khoa Phục Hồi Chức Năng', 'active', NOW(), NOW()),
+(3, 'Khoa Xét Nghiệm', 'active', NOW(), NOW());
 
 -- Chèn dữ liệu mẫu cho Doctor
 INSERT INTO doctors (hospital_id, department_id, name, phone, email, status, created_at, updated_at) VALUES

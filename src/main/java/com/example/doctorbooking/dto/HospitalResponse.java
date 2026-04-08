@@ -1,9 +1,7 @@
 package com.example.doctorbooking.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +13,7 @@ public class HospitalResponse {
     private String address;
     private String phone;
     private String email;
+    private List<DepartmentDTO> departments;
 
     private String created_at;
     private String updated_at;
