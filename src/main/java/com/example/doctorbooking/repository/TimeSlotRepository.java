@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public interface TimeSlotRepository extends JpaRepository<TimeSlot, Integer> {
 
-    List<TimeSlot> findByDoctorIdAndSlotDateOrderByStartTime(Integer doctorId, LocalDate slotDate);
+    List<TimeSlot> findByDoctorIdAndSlotDateOrderByStartTimeAsc(
+            Integer doctorId, LocalDate slotDate);
 
     @Query("SELECT ts FROM TimeSlot ts WHERE ts.doctor.id = :doctorId AND ts.slotDate = :slotDate AND ts.status = 'available'")
     List<TimeSlot> findAvailableSlotsByDoctorAndDate(@Param("doctorId") Integer doctorId, @Param("slotDate") LocalDate slotDate);

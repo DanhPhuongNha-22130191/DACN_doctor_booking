@@ -7,7 +7,6 @@ import com.example.doctorbooking.entity.*;
 import com.example.doctorbooking.entity.AppointmentStatus;
 import com.example.doctorbooking.enums.SlotStatus;
 import com.example.doctorbooking.repository.*;
-import com.example.doctorbooking.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +26,30 @@ public class BookingServiceImpl implements BookingService {
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
+
+    @Override
+    public List<TimeSlotResponse> getTimeSlots(Long doctorId, LocalDate date) {
+        // Không cho phép lấy slot của ngày trong quá khứ
+        if (date.isBefore(LocalDate.now())) {
+            return Collections.emptyList();
+        }
+
+        List<TimeSlot> slots = timeSlotRepository
+                .findByDoctorIdAndSlotDateOrderByStartTimeAsc(
+                        Math.toIntExact(doctorId), date);
+
+        return slots.stream()
+                .map(slot -> TimeSlotResponse.builder()
+                        .id(slot.getId())
+                        .slotDate(slot.getSlotDate())
+                        .startTime(slot.getStartTime())
+                        .endTime(slot.getEndTime())
+                        .status(slot.getStatus())
+                        // Chỉ những slot có status = "available" mới được đặt
+                        .isAvailable("available".equalsIgnoreCase(slot.getStatus()))
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<TimeSlotResponse> getAvailableTimeSlots(Long doctorId, LocalDate date) {

@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface BookingService {
 
+    List<TimeSlotResponse> getTimeSlots(Long doctorId, LocalDate date);
+
     // API 1: Lấy danh sách khung giờ khả dụng của bác sĩ
     List<TimeSlotResponse> getAvailableTimeSlots(Long doctorId, LocalDate date);
 

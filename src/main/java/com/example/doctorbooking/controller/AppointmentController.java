@@ -21,6 +21,16 @@ public class AppointmentController {
 
     private final BookingService bookingService;
 
+    // Lấy toàn bộ khung giờ của bác sĩ
+    @GetMapping("/all-slots")
+    public ResponseEntity<List<TimeSlotResponse>> getAllSlots(
+            @RequestParam Long doctorId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        List<TimeSlotResponse> slots = bookingService.getTimeSlots(doctorId, date);
+        return ResponseEntity.ok(slots);
+    }
+
     /**
      * API 1: Lấy danh sách khung giờ khả dụng của bác sĩ
      * GET /api/bookings/slots?doctorId=1&date=2024-12-10
