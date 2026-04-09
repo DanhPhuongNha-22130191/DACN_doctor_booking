@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -105,5 +106,24 @@ public class DoctorService {
         return doctors.stream()
                 .map(doctorMapper::toDoctorResponse)
                 .toList();
+    }
+    public List<DoctorDTO> getDoctorsByHospital(Integer hospitalId) {
+        Hospital hospital = hospitalRepository.findById(hospitalId)
+                .orElseThrow(() -> new RuntimeException("Bệnh viện không tồn tại"));
+
+        List<Doctor> doctors = doctorRepository.findByHospital(hospital);
+
+        return doctors.stream().map(doctor -> DoctorDTO.builder()
+                .id(doctor.getId())
+                .name(doctor.getName())
+                .phone(doctor.getPhone())
+                .email(doctor.getEmail())
+                .status(doctor.getStatus().name())
+                .hospitalId(hospital.getId())
+                .hospitalName(hospital.getName())
+                .departmentId(doctor.getDepartment().getId())
+                .departmentName(doctor.getDepartment().getName())
+                .build()
+        ).collect(Collectors.toList());
     }
 }
