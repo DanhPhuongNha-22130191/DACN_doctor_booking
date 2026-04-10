@@ -1,6 +1,7 @@
 package com.example.doctorbooking.repository;
 
 import com.example.doctorbooking.entity.Doctor;
+import com.example.doctorbooking.entity.Hospital;
 import com.example.doctorbooking.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,5 @@ import java.util.List;
 public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
     List<Doctor> findByStatus(Status status);
     List<Doctor> findByNameContainingIgnoreCase(String name);
+    List<Doctor> findByHospital(Hospital hospital);
 }

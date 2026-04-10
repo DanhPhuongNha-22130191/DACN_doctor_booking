@@ -2,10 +2,9 @@ package com.example.doctorbooking.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "appointments")
@@ -17,7 +16,10 @@ import java.time.LocalDateTime;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
+    @Column(name = "booking_code", nullable = false, unique = true, length = 20)
+    private String bookingCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -27,21 +29,28 @@ public class Appointment {
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    @Column(name = "appointment_date", nullable = false)
-    private LocalDateTime appointmentDate;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "time_slot_id")
+    private TimeSlot timeSlot;
 
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private AppointmentStatus status = AppointmentStatus.PENDING;
+    @Column(name = "appointment_date", nullable = false)
+    private LocalDate appointmentDate;
+
+    @Column(name = "appointment_time", nullable = false)
+    private LocalTime appointmentTime;
 
     @Column(columnDefinition = "TEXT")
-    private String reason;
+    private String symptoms;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(nullable = false)
+    @Builder.Default
+    private String status = "pending"; // pending, confirmed, completed, cancelled
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

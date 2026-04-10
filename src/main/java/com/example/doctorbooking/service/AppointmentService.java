@@ -26,32 +26,32 @@ public class AppointmentService {
     private final UserRepository userRepository;
     private final AppointmentMapper appointmentMapper;
 
-    @Transactional
-    public AppointmentDTO createAppointment(AppointmentRequest request) {
-        // 1. Kiểm tra ngày hẹn
-        if (request.getAppointmentDate().isBefore(LocalDateTime.now())) {
-            throw new AppException(ErrorCode.INVALID_APPOINTMENT_DATE);
-        }
-
-        // 2. Kiểm tra User
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        // 3. Kiểm tra Doctor
-        Doctor doctor = doctorRepository.findById(request.getDoctorId())
-                .orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_FOUND));
-
-        // 4. Tạo Appointment
-        Appointment appointment = Appointment.builder()
-                .user(user)
-                .doctor(doctor)
-                .appointmentDate(request.getAppointmentDate())
-                .reason(request.getReason())
-                .build();
-
-        Appointment savedAppointment = appointmentRepository.save(appointment);
-
-        // 5. Trả về DTO
-        return appointmentMapper.toAppointmentDTO(savedAppointment);
-    }
+//    @Transactional
+//    public AppointmentDTO createAppointment(AppointmentRequest request) {
+//        // 1. Kiểm tra ngày hẹn
+//        if (request.getAppointmentDate().isBefore(LocalDateTime.now())) {
+//            throw new AppException(ErrorCode.INVALID_APPOINTMENT_DATE);
+//        }
+//
+//        // 2. Kiểm tra User
+//        User user = userRepository.findById(request.getUserId())
+//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+//
+//        // 3. Kiểm tra Doctor
+//        Doctor doctor = doctorRepository.findById(request.getDoctorId())
+//                .orElseThrow(() -> new AppException(ErrorCode.DOCTOR_NOT_FOUND));
+//
+//        // 4. Tạo Appointment
+//        Appointment appointment = Appointment.builder()
+//                .user(user)
+//                .doctor(doctor)
+//                .appointmentDate(request.getAppointmentDate())
+//                .reason(request.getReason())
+//                .build();
+//
+//        Appointment savedAppointment = appointmentRepository.save(appointment);
+//
+//        // 5. Trả về DTO
+//        return appointmentMapper.toAppointmentDTO(savedAppointment);
+//    }
 }
