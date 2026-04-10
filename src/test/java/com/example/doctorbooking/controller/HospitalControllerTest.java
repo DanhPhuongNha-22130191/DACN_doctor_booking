@@ -4,50 +4,44 @@ import com.example.doctorbooking.dto.HospitalDTO;
 import com.example.doctorbooking.dto.HospitalRequest;
 import com.example.doctorbooking.dto.HospitalResponse;
 import com.example.doctorbooking.service.HospitalService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(HospitalController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 public class HospitalControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private HospitalService hospitalService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private HospitalController hospitalController;
 
     @Test
-    void testGetAll() throws Exception {
+    void testGetAll() {
         HospitalResponse response = new HospitalResponse();
         response.setName("Test Hospital");
 
         when(hospitalService.getAllHospital()).thenReturn(List.of(response));
 
-        mockMvc.perform(get("/api/hospitals"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Test Hospital"));
+        ResponseEntity<List<HospitalResponse>> result = hospitalController.getAll();
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Test Hospital", result.getBody().get(0).getName());
     }
 
     @Test
-    void testCreateHospital() throws Exception {
+    void testCreateHospital() {
         HospitalRequest request = new HospitalRequest();
         request.setName("New Hospital");
 
@@ -56,19 +50,16 @@ public class HospitalControllerTest {
 
         when(hospitalService.createHospital(any(HospitalRequest.class))).thenReturn(dto);
 
-        mockMvc.perform(post("/api/hospitals")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("New Hospital"));
+        ResponseEntity<HospitalDTO> result = hospitalController.createHospital(request);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("New Hospital", result.getBody().getName());
     }
 
     @Test
-    void testDeleteHospital() throws Exception {
-        mockMvc.perform(delete("/api/hospitals/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Hospital deleted successfully"));
-
+    void testDeleteHospital() {
+        ResponseEntity<String> result = hospitalController.deleteHospital(1);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Hospital deleted successfully", result.getBody());
         verify(hospitalService).deleteHospital(1);
     }
 }

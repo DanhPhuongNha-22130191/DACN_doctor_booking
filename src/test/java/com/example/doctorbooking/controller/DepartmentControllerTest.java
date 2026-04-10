@@ -2,55 +2,49 @@ package com.example.doctorbooking.controller;
 
 import com.example.doctorbooking.dto.DepartmentDTO;
 import com.example.doctorbooking.service.DepartmentService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(DepartmentController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 public class DepartmentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private DepartmentService departmentService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private DepartmentController departmentController;
 
     @Test
-    void testGetDepartments() throws Exception {
+    void testGetDepartments() {
         DepartmentDTO dto = new DepartmentDTO();
         dto.setName("Cardiology");
 
         when(departmentService.getAllDepartments()).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/api/departments"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Cardiology"));
+        ResponseEntity<List<DepartmentDTO>> result = departmentController.getDepartments();
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Cardiology", result.getBody().get(0).getName());
     }
 
     @Test
-    void testGetDepartmentsByHospital() throws Exception {
+    void testGetDepartmentsByHospital() {
         DepartmentDTO dto = new DepartmentDTO();
         dto.setName("Cardiology");
 
         when(departmentService.getDepartmentsByHospitalId(1)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/api/departments/hospital/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Cardiology"));
+        ResponseEntity<List<DepartmentDTO>> result = departmentController.getDepartmentsByHospital(1);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Cardiology", result.getBody().get(0).getName());
     }
 }

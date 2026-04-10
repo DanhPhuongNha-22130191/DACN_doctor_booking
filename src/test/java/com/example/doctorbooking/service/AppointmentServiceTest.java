@@ -3,7 +3,7 @@ package com.example.doctorbooking.service;
 import com.example.doctorbooking.dto.AppointmentDTO;
 import com.example.doctorbooking.dto.AppointmentRequest;
 import com.example.doctorbooking.entity.Appointment;
-import com.example.doctorbooking.entity.AppointmentStatus;
+import com.example.doctorbooking.enums.AppointmentStatus;
 import com.example.doctorbooking.entity.Doctor;
 import com.example.doctorbooking.entity.User;
 import com.example.doctorbooking.exception.AppException;
@@ -11,7 +11,6 @@ import com.example.doctorbooking.mapper.AppointmentMapper;
 import com.example.doctorbooking.repository.AppointmentRepository;
 import com.example.doctorbooking.repository.DoctorRepository;
 import com.example.doctorbooking.repository.UserRepository;
-import com.example.doctorbooking.service.AppointmentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AppointmentServiceTest {
+public class AppointmentServiceTest {
 
     @Mock
     private AppointmentRepository appointmentRepository;
@@ -69,12 +68,13 @@ class AppointmentServiceTest {
         when(doctorRepository.findById(1)).thenReturn(Optional.of(doctor));
         
         Appointment savedAppointment = Appointment.builder()
-                .id(1)
+                .id(1L)
                 .user(user)
                 .doctor(doctor)
-                .appointmentDate(request.getAppointmentDate())
-                .status(AppointmentStatus.PENDING)
-                .reason(request.getReason())
+                .appointmentDate(request.getAppointmentDate().toLocalDate())
+                .appointmentTime(request.getAppointmentDate().toLocalTime())
+                .status("pending")
+                .symptoms(request.getReason())
                 .build();
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(savedAppointment);
 

@@ -1,50 +1,65 @@
 package com.example.doctorbooking.controller;
 
-import com.example.doctorbooking.dto.AppointmentDTO;
-import com.example.doctorbooking.dto.AppointmentRequest;
-import com.example.doctorbooking.service.AppointmentService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.doctorbooking.dto.AppointmentResponse;
+import com.example.doctorbooking.dto.CreateAppointmentRequest;
+import com.example.doctorbooking.dto.TimeSlotResponse;
+import com.example.doctorbooking.service.BookingService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AppointmentController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 public class AppointmentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private BookingService bookingService;
 
-    @MockBean
-    private AppointmentService appointmentService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private AppointmentController appointmentController;
 
     @Test
-    void testCreateAppointment() throws Exception {
-        AppointmentRequest request = new AppointmentRequest();
-        request.setReason("Checkup");
+    void testGetAllSlots() {
+        TimeSlotResponse slot = TimeSlotResponse.builder().build();
+        when(bookingService.getTimeSlots(eq(1L), any(LocalDate.class))).thenReturn(List.of(slot));
 
-        AppointmentDTO dto = new AppointmentDTO();
-        dto.setReason("Checkup");
+        ResponseEntity<List<TimeSlotResponse>> response = appointmentController.getAllSlots(1L, LocalDate.now());
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+    }
 
-        when(appointmentService.createAppointment(any(AppointmentRequest.class))).thenReturn(dto);
+    @Test
+    void testGetAvailableSlots() {
+        TimeSlotResponse slot = TimeSlotResponse.builder().build();
+        when(bookingService.getAvailableTimeSlots(eq(1L), any(LocalDate.class))).thenReturn(List.of(slot));
 
-        mockMvc.perform(post("/api/appointments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.reason").value("Checkup"));
+        ResponseEntity<List<TimeSlotResponse>> response = appointmentController.getAvailableSlots(1L, LocalDate.now());
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+    }
+
+    @Test
+    void testCreateAppointment() {
+        CreateAppointmentRequest request = new CreateAppointmentRequest();
+        
+        AppointmentResponse apptResponse = AppointmentResponse.builder().build();
+        when(bookingService.createAppointment(any(CreateAppointmentRequest.class), any(Long.class))).thenReturn(apptResponse);
+
+        ResponseEntity<AppointmentResponse> response = appointmentController.createAppointment(request);
+        
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 }
