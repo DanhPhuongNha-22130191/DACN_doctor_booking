@@ -1,4 +1,4 @@
-package com.example.doctorbooking.service.test;
+package com.example.doctorbooking.service;
 
 import com.example.doctorbooking.dto.AppointmentDTO;
 import com.example.doctorbooking.dto.AppointmentRequest;
