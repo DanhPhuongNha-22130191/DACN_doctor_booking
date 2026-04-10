@@ -53,4 +53,9 @@ public class DoctorController {
     ) {
         return ResponseEntity.ok(doctorService.searchDoctors(keyword));
     }
+    // API lấy ds bác sĩ theo bệnh viện
+    @GetMapping("/hospital/{hospitalId}")
+    public List<DoctorDTO> getDoctorsByHospital(@PathVariable Integer hospitalId) {
+        return doctorService.getDoctorsByHospital(hospitalId);
+    }
 }

@@ -56,4 +56,9 @@ public class HospitalController {
     ) {
         return ResponseEntity.ok(hospitalService.updateHospital(id, hospitalRequest));
     }
+    // API lấy danh sách bệnh viện đang hoạt động
+    @GetMapping("/active")
+    public List<HospitalResponse> getActiveHospitals() {
+        return hospitalService.getAllHospital();
+    }
 }

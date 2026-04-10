@@ -1,4 +1,4 @@
-package com.example.doctorbooking.entity;
+package com.example.doctorbooking.enums;
 
 public enum AppointmentStatus {
     PENDING,

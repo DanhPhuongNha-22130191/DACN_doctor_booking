@@ -1,6 +1,6 @@
 package com.example.doctorbooking.dto;
 
-import com.example.doctorbooking.entity.AppointmentStatus;
+import com.example.doctorbooking.enums.AppointmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
