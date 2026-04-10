@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.security.MessageDigest;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -32,7 +34,7 @@ public class UserService {
 
         User user = User.builder()
                 .username(request.getUsername().trim())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(hashPassword(request.getPassword()))
                 .email(request.getEmail().trim())
                 .fullName(normalizeNullable(request.getFullName()))
                 .phone(normalizeNullable(request.getPhone()))
@@ -84,5 +86,32 @@ public class UserService {
 
     private String normalizeNullable(String value) {
         return StringUtils.hasText(value) ? value.trim() : null;
+    }
+    public String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(password.getBytes());
+
+            StringBuilder hex = new StringBuilder();
+            for (byte b : hash) {
+                hex.append(String.format("%02x", b));
+            }
+            return hex.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User login(String username, String password) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+
+        String hashedInput = hashPassword(password);
+
+        if (!user.getPassword().equals(hashedInput)) {
+            throw new RuntimeException("Sai mật khẩu");
+        }
+        return user;
     }
 }
